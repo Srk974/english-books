@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Styles a library website layout</title>
+
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f6f9;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.sidebar li:hover {
+  background: #34495e;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.subcategory {
+  margin-bottom: 20px;
+}
+
+.subcategory h3 {
+  margin-bottom: 10px;
+  color: #3498db;
+}
+
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.book {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.book img {
+  max-width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.book a {
+  display: block;
+  margin-top: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #2c3e50;
+}
+
+.book a:hover {
+  color: #e67e22;
+}
+
+  </style>
+
+  
+</head>
+<body>
+  <div class="container">
+  <aside class="sidebar">
+    <h2>Categories</h2>
+    <ul id="categoryList"></ul>
+  </aside>
+
+  <main class="content">
+    <h2 id="categoryTitle">Select a Category</h2>
+    <div id="bookSections"></div>
+  </main>
+</div>
+
+
+  <script>
+    // Categories
+const categories = [
+  "Preschool", "Grade 1", "Grade 2", "Grade 3",
+  "Grade 4", "Grade 5", "Grade 6", "Grade 7",
+  "Grade 8", "Cambridge"
+];
+
+const subcategories = ["Main Resources", "Additional Resources", "Speaking"];
+
+// Resources Data
+const resources = {
+  "Preschool": {
+    "Main Resources": [
+      {
+        title: "Smart Cookies",
+        image: "https://farbeeducation.com/images/sc3.jpg",
+        link: "https://smartcookies.highpeakpublishing.co.uk/membership/dashboard"
+      }
+    ],
+    "Additional Resources": [],
+    "Speaking": []
+  },
+  "Grade 1": {
+    "Main Resources": [
+      {
+        title: "Happy Campers 1",
+        image: "https://www.trims.edu.az/cache/b90d89777addd58671cba9f1e04809eb_400_514.jpg",
+        link: "https://www.trims.edu.az/noduploads/book/quot-ingilis-dili-quot-happy-campers-asas-xarici-dil-fanni-uzra-1-ci-sinif-ucun-darslik.pdf"
+      },
+      {
+        title: "Bright Ideas Starter",
+        image: "https://sun9-40.userapi.com/impg/FGbhINljFV9U1J0uaPijlEejQlFgdDLS9q8T5A/Yb99mfVeuoQ.jpg?size=507x640&quality=96&sign=0fbed094a9388eae505509fd215ecae8&type=album",
+        link: "https://psv4.userapi.com/s/v1/d/sIA_s9zb6zdSgsiRSpjeZf65EZ-gHeM8-MlXyPGmhxQkluutTGPyAZ16NUcW8QdivMX-qGi9Zk1uPneyipj087e5EcCz3zzXDIibGTxlcOefMcT3/bright_ideas_starter_students_book.pdf"
+      },
+      {
+        title: "Oxford Phonics World 1",
+        image: "https://sun9-58.userapi.com/impg/P1y-qXE7Uf1KFGkGWnPu93Y3KmPfBsVFYOyoKg/SP5Tj3RpcCY.jpg?size=405x522&quality=96&sign=89eb5675e2e79057c3505efc6fd1f234&type=album",
+        link: "https://sun9-58.userapi.com/impg/P1y-qXE7Uf1KFGkGWnPu93Y3KmPfBsVFYOyoKg/SP5Tj3RpcCY.jpg?size=405x522&quality=96&sign=89eb5675e2e79057c3505efc6fd1f234&type=album"
+      }
+    ],
+    "Additional Resources": [],
+    "Speaking": [
+      {
+        title: "Everyday English",
+        image: "https://online.fliphtml5.com/ckiis/roxu/files/large/7d0f45b4b1cf6603762c74ca39c833dd.webp?1676373567&1676373567",
+        link: "https://fliphtml5.com/ckiis/roxu/basic"
+      }
+    ]
+  },
+  "Grade 2": {
+    "Main Resources": [
+      {
+        title: "Happy Campers 2",
+        image: "https://www.trims.edu.az/cache/96f6cac5fd7556bff431241eb80bb6a9_400_505.jpg",
+        link: "https://www.trims.edu.az/noduploads/book/quot-ingilis-dili-quot-happy-campers-asas-xarici-dil-fanni-uzra-2-ci-sinif-ucun-darslik-1633538243-638-backup.pdf"
+      },
+      {
+        title: "Bright Ideas 1",
+        image: "https://sun9-84.userapi.com/impg/AAYuQiebLeV_V87Jl5zv4hMJx4LJfzZI_ElRtA/3eb7_PkV73M.jpg?size=426x533&quality=96&sign=1b9727ad62267d02be9cfb6f25e205c3&type=album",
+        link: "https://ebook4yle.com/skills/listening/bright-ideas-1-class-book.html"
+      },
+      {
+        title: "Oxford Phonics World 2",
+        image: "https://online.flipbuilder.com/xtrvf/rvtn/files/mobile/1.jpg?231013095947",
+        link: "https://online.flipbuilder.com/xtrvf/rvtn/"
+      }
+    ],
+    "Additional Resources": [
+      {
+        title: "Super Minds 1",
+        image: "https://online.flipbuilder.com/sdtta/uzib/files/mobile/1.jpg?200425151158",
+        link: "https://online.flipbuilder.com/sdtta/uzib/"
+      }
+    ],
+    "Speaking": [
+      {
+        title: "Oxford Primary Reading and Writing 1",
+        image: "https://online.flipbuilder.com/sdtta/eswx/files/mobile/1.jpg?210109201325",
+        link: "https://online.flipbuilder.com/sdtta/eswx/"
+      }
+    ]
+  },
+  "Grade 3": {
+    "Main Resources": [
+      {
+        title: "Happy Campers 3",
+        image: "https://www.trims.edu.az/cache/0acbd536823b3ae497cc499acbb4e87a_400_503.jpg",
+        link: "https://www.trims.edu.az/noduploads/book/quot-ingilis-dili-quot-happy-campers-asas-xarici-dil-fanni-uzra-3-cu-sinif-ucun-darslik-1664344882-255.pdf"
+      },
+      {
+        title: "Bright Ideas 2",
+        image: "https://online.fliphtml5.com/vcaoy/vkxe/files/large/85b03538edd8ae0ea1575bdc95c8885d.webp?1722346868&1722346868",
+        link: "https://fliphtml5.com/vcaoy/vkxe/Bright_Ideas_2_Student´s_Book/"
+      },
+      {
+        title: "Oxford Phonics World 3",
+        image: "https://online.flipbuilder.com/xtrvf/qseh/files/mobile/1.jpg?231013103619",
+        link: "https://online.flipbuilder.com/xtrvf/qseh/"
+      }
+    ],
+    "Additional Resources": [
+      {
+        title: "Oxford Primary Reading and Writing 2",
+        image: "https://online.flipbuilder.com/sdtta/axyt/files/mobile/1.jpg?210113101000",
+        link: "https://online.flipbuilder.com/sdtta/axyt/"
+      }
+    ],
+    "Speaking": [
+      {
+        title: "Oxford Read and Discover 1",
+        image: "https://sun9-4.userapi.com/impg/c834103/v834103006/191c5d/A3buq3bJqS8.jpg?size=676x666&quality=96&sign=0c0f77234cf2c7ebd56a2130f826f410&type=album",
+        subcategories: [
+          { title: "Eyes", link: "https://psv4.userapi.com/s/v1/d/gCSCs727Te72UkVELrpSKckOJsX4u4_KeGZB9s2S9QuExnE-vD74KWeDJ5-fKhkW7oLE59xVAP2ZzJW2rSW0AiQ0wBmLLQmDB_E9-Zq2rcQ98SfP/Eyes_OR_amp_D_Level_1.pdf" },
+          { title: "Fruit", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Fruit.pdf" },
+          { title: "Trees", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Trees.pdf" },
+          { title: "Wheels", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Wheels.pdf" },
+          { title: "At the Beach", link: "https://pubhtml5.com/ztxs/olyf/At_the_Beach_L1_Oxford_Read_and_Discover_Discover_1_ProQual/" },
+          { title: "In the Sky", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/In-the-Sky.pdf" },
+          { title: "Young Animals", link: "https://psv4.userapi.com/s/v1/d/mKgPyOf-F_qehSPVDear-IPM7ifMjVBQT4xQs_-p3YRVg-gsAXXOAhNp_pZ13D4LWpqu9A_b72kjAN0Ko5sS4sJJI6kvr8OKLs0POLRb8DeZD5vu/Oxford_Read_and_Discover_Level_1_Young_Animals.pdf" },
+          { title: "Art", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Art.pdf" },
+          { title: "Schools", link: "https://vk.com/doc406952668_451388954?hash=GboVZSMaebIW3N8aqXhJghWag8rej1CzOiTcRDsC5G4" },
+          { title: "Wild Cats", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/wild-cats.pdf" }
+        ]
+      }
+    ]
+  },
+  "Grade 4": {
+    "Main Resources": [
+      {
+        title: "Happy Campers 4",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUMYtOgEnNYCooLGpgoIE88aedjMRTHiZy8A&s",
+        link: "https://www.trims.edu.az/noduploads/book/quot-ingilis-dili-quot-happy-campers-asas-xarici-dil-fanni-uzra-4-cu-sinif-ucun-darslik-1692861399-491.pdf"
+      },
+      {
+        title: "Bright Ideas 3",
+        image: "https://m.media-amazon.com/images/I/71-cVjSdkyL._UF1000,1000_QL80_.jpg",
+        link: "https://ebook4yle.com/skills/listening/bright-ideas-3-class-book.html"
+      }
+    ],
+    "Additional Resources": [
+      {
+        title: "Super Minds 2",
+        image: "https://online.flipbuilder.com/sdtta/hrjm/files/mobile/1.jpg?210516222649",
+        link: "https://online.flipbuilder.com/sdtta/hrjm/"
+      },
+      {
+        title: "Oxford Primary Reading and Writing 3",
+        image: "https://online.flipbuilder.com/sdtta/ouax/files/mobile/1.jpg?210113104158",
+        link: "https://online.flipbuilder.com/sdtta/ouax/"
+      }
+    ],
+    "Speaking": [
+      {
+        title: "Oxford Read and Discover 2",
+        image: "https://sieuthisachtienganh.com/wp-content/uploads/2024/12/1-44.jpg",
+        subcategories: [
+          { title: "Cities", link: "https://psv4.userapi.com/s/v1/d/TXp1wELe682-xtcc1kFrS8vl2phWYVzdYCFe_eyP9yOZFbILbIlV92Qq9ZRd3FuR7t_6Jx3z-Y3CxoyAEjosYaYBwCpoFDg6ktPYsriCUiXBoJsa/cities.pdf" },
+          { title: "Electricity", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Electricity.pdf" },
+          { title: "Plastic", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Plastic.pdf" },
+          { title: "Sunny and Rainy", link: "https://psv4.userapi.com/s/v1/d/d9RcKMpBe_wkp1g9ycQUkV488xe2K7bjX93XNbhxDQmiBkUHhIBlDkJlaFn3ammRs5mypsYfINeVIogkE7LSJ_ZWQC2kunA8tMB9C2bgXyi761NU/Sunny_and_Rainy_L2.pdf" },
+          { title: "Your Body", link: "https://psv4.userapi.com/s/v1/d/ONfa9JczJslewC4S6XUSaLhcdVIpFffDwePWQSNb7FteQmW_Op6CniFsPImRwS3gKNkHcEKEMeU4Z1MzsBWyH25cXeLtebQIR12JuiiE-_vvytIR/Your_Body_L2.pdf" },
+          { title: "Earth", link: "https://psv4.userapi.com/s/v1/d/HSjjzFeh4GTCERXryUMj4pIAmDxogtvhz59hO3LPk_wivJOCQaFngbb7AXPeCSiKgzwEzWkRlOudJrDcj_2d-1CT8DxluUly1iCd4S6WljY/Earth_L2.pdf" },
+          { title: "Farms", link: "https://psv4.userapi.com/s/v1/d/i9ggM8kGLKsVYxOPGavIJNHWNnw-uwp4-mra-SvNB9fWhxlntcNoOJiG79wnaGlhY7IKSaepPIEHOBefeneu7hUePqcusX1OYjDMom-axRWmTUNa/Farms_L2.pdf" },
+          { title: "In the Mountains", link: "https://cdn.ispeak.vn/file/ispeak/files/2020/pre/O1/O2/O3/O4/O5/O6/OF/da/OD1/OX2/Oxford%20Read%20and%20Discover%202_U8_in_the_mountains_p1.pdf" },
+          { title: "Jobs", link: "https://psv4.userapi.com/s/v1/d/3yQIJffySEn-PFjgCDACxSPeNbAptMpqytl0grNTlbzKRMNBQwkTYSXnGLuoBvDRa5f8NcHsRR_VwUSX3zppMfgeoPQ29oynsTJMW_Li25RCr4wy/Oxford_Read_and_Discover_Level_2_Jobs.pdf" },
+          { title: "Camouflage", link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Camouflage.pdf" }
+        ]
+      }
+    ]
+  },
+  "Grade 5": {
+  "Main Resources": [
+    {
+      title: "Game Changer 5",
+      image: "https://www.trims.edu.az/cache/48912d0adc4733d7b47e3e07263a2e33_400_566.jpg",
+      link: "https://www.trims.edu.az/noduploads/book/quot-english-quot-ingilis-dili-asas-xarici-dil-fanni-uzra-5-ci-sinif-ucun-darslik-1727852668-855.pdf"
+    },
+    {
+      title: "Bright Ideas 4",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSkT6fxwcMeuziCs8LrkWXn0NeWGj0Dx8oow&s$0",
+      link: "https://drive.google.com/file/d/12mgYu7RJZs9Z9WAGQ0B5Wg_XFIqKafwp/view"
+    }
+  ],
+  "Additional Resources": [
+    {
+      title: "Super Minds 3",
+      image: "https://online.flipbuilder.com/sdtta/gphd/files/mobile/1.jpg?210517202240$0",
+      link: "https://online.flipbuilder.com/xtrvf/rwjz/"
+    },
+    {
+      title: "Oxford Grammar for Schools 1",
+      image: "https://online.flipbuilder.com/xtrvf/hidr/files/mobile/1.jpg?231007134909$0",
+      link: "https://online.flipbuilder.com/xtrvf/hidr/"
+    },
+    {
+      title: "Oxford Grammar for Schools 2",
+      image: "https://online.flipbuilder.com/acfrt/pjfi/files/thumb/1.jpg?220720121621$0",
+      link: "https://online.flipbuilder.com/sdtta/mieo/"
+    }
+  ],
+  "Speaking": [
+    {
+      title: "Oxford Read and Discover 3",
+      image: "https://sun9-47.userapi.com/impg/c834103/v834103182/18fd38/55jk44kq_do.jpg?size=604x338&quality=96&sign=8585f9d6f700a7af18b0e4548f32f6f2&type=album$0",
+      link: "https://vk.com/wall352963269_293"
+    }
+  ]
+},
+"Grade 6": {
+  "Main Resources": [
+    {
+      title: "Game Changer 6",
+      image: "https://www.trims.edu.az/cache/15cf7972f9da883e2089f104b7745c7f_400_565.jpg", // Replace with real Game Changer 6 cover if you get it
+      link: "https://www.trims.edu.az/noduploads/book/quot-english-quot-ingilis-dili-asas-xarici-dil-fanni-uzra-6-ci-sinif-ucun-darslik-1730967040-672-backup.pdf"
+    },
+    {
+      title: "Bright Ideas 5",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZDKr5Az1MnZYawphVACFyDnmTL-zZCQ8Vtw&s$0L", // Replace with Bright Ideas 5 cover
+      link: "https://ebook4yle.com/skills/listening/bright-ideas-5-class-book.html"
+    }
+  ],
+  "Additional Resources": [
+    {
+      title: "Super Minds 4",
+      image: "https://educationalcentre.al/shop/image/cache/catalog/0001/sm4-600x315.jpg", // Super Minds 4 cover
+      link: "https://online.flipbuilder.com/xtrvf/bvct/"
+    },
+    {
+      title: "Oxford Grammar for Schools 2",
+      image: "https://online.flipbuilder.com/acfrt/pjfi/files/thumb/1.jpg?220720121621$0", // Replace with proper cover
+      link: "https://online.flipbuilder.com/sdtta/mieo/"
+    },
+    {
+      title: "Oxford Grammar for Schools 3",
+      image: "https://salt.tikicdn.com/ts/product/9a/82/81/645275cb9e1c3fb894c9028e55edd83d.jpg",
+      link: "https://online.flipbuilder.com/sdtta/avzg/"
+    }
+  ],
+  "Speaking": [
+    {
+      title: "Oxford Read and Discover 4",
+      image: "https://sun9-81.userapi.com/impg/c834103/v834103182/18fd72/y7JBMfTqVyw.jpg?size=677x666&quality=96&sign=6ccc53ec8528dc196568895dc7777266&type=album$0",
+      link: "https://vk.com/wall352963269_292"
+    }
+  ]
+},
+"Grade 7": {
+  "Main Resources": [
+    {
+      title: "English 7",
+      image: "https://www.trims.edu.az/cache/bb4481c1aabce5812a834e8a09ce439b_400_570.jpg",
+      link: "https://www.trims.edu.az/noduploads/book/quot-english-quot-ingilis-dili-asas-xarici-dil-fanni-uzra-7-ci-sinif-ucun-darslik-1665509171-606.pdf"
+    },
+    {
+      title: "Bright Ideas 6",
+      image: "https://static.yakaboo.ua/media/catalog/product/4/6/464_8.jpg",
+      link: "https://ebook4yle.com/skills/listening/bright-ideas-6-class-book.html"
+    }
+  ],
+  "Additional Resources": [
+    {
+      title: "Super Minds 5",
+      image: "https://www.eltbooks.com/cover/9781107604407.jpg",
+      link: "https://dl2.languagecentre.ir/super-minds-series/Super-Minds-5-Student's_Book-%5Bwww.languagecentre.ir%5D.pdf"
+    },
+    {
+      title: "Oxford Grammar for Schools 3",
+      image: "https://m.media-amazon.com/images/I/716aBGmKKlL._UF1000,1000_QL80_.jpg",
+      link: "" // You didn’t give me a link for this one
+    },
+    {
+      title: "Oxford Grammar for Schools 4",
+      image: "https://salt.tikicdn.com/cache/w1200/ts/product/26/4b/94/e898157cd61654906ad40240430fc031.jpg",
+      link: "https://online.flipbuilder.com/sdtta/kavx/"
+    }
+  ],
+  "Speaking": [
+    {
+      title: "Oxford Read and Discover 5",
+      image: "https://media.karousell.com/media/photos/products/2022/9/28/oxford_read_and_discover_level_1664336178_0aaf5dbc_progressive",
+      link: "", // missing main link, only subcategories available
+      subcategories: [
+        {
+          title: "Materials to Product",
+          link: "https://psv4.userapi.com/s/v1/d/WYm6GxEKgv_LehlojA4WQwT7yvd1UcXbAXdh1iOOB82MBpWtScLgSQZ5gMtfQE14t8wLKL3LgvsMNub8_P5v3gunQ7zKwOXHM-QKP8mGLnWWf579/raynham_a_materials_to_products_oxford_read_and_discover_lev.pdf"
+        },
+        {
+          title: "Medicine Then and Now",
+          link: "https://cdn.ispeak.vn/file/ispeak/files/2020/pre/O1/O2/O3/O4/O5/O6/OF/da/OD1/OX2/OX3/OX4/ox5/Oxford%20Read%20and%20Discover%205_U2_medicine_the_and_now_p1.pdf"
+        },
+        {
+          title: "Transportation Then and Now",
+          link: "https://kig.hu/images/article/15056/Transportation_Then_and_Now_5_.pdf"
+        },
+        {
+          title: "Wild Weather",
+          link: "https://fliphtml5.com/bfepu/lsiu/basic"
+        },
+        {
+          title: "All About Islands",
+          link: "https://vdoc.pub/download/all-about-islands-read-and-discover-level-5-671qav97pl20"
+        },
+        {
+          title: "Animal Life Cycles",
+          link: "https://cdn.ispeak.vn/file/ispeak/files/2020/pre/O1/O2/O3/O4/O5/O6/OF/da/OD1/OX2/OX3/OX4/ox5/Oxford%20Read%20and%20Discover%205_U6_animal_life_cycles_p1.pdf"
+        },
+        {
+          title: "Exploring Our World",
+          link: "https://psv4.userapi.com/s/v1/d/D2z6radFwmbnSef2jzmibU0rabwNS1dvky39ulnD-eybd6W7CclszNrcUNmGY3GvCHk2z83N4rdDhDZs9OuOGXrykAcT6WbNzFaNWOrLtsO4LjiI/Oxford_Read_and_Discover_Level_5_Exploring_Our_World.pdf"
+        },
+        {
+          title: "Great Migration",
+          link: "https://vk.com/doc8069473_199398211?hash=ZRgFGHcjPV9gE1ZRdWJkR2NVF1Jzsel1BMwtTzXpZfP"
+        },
+        {
+          title: "Homes Around the World",
+          link: "https://vk.com/doc8069473_199398450?hash=C6tRt9mTt4vDrgpzoc2oolEkBSNYrIIPnFglu0EYmZ4"
+        },
+        {
+          title: "Our World In Art",
+          link: "https://psv4.userapi.com/s/v1/d/Mf8-m80cDFrbplHEUm7oVlpDmQAvsXrUP9XyEyLiZPTu9EfpQEeEIG198JMZ3RUCetZYLc2ETj3rIWj-CpToCKsrKey_rE1uBzBhl7cYE-mp7lcR/northcott_richard_our_world_in_art_oxford_read_and_discover.pdf"
+        }
+      ]
+    }
+  ]
+},
+"Grade 8": {
+  "Main Resources": [
+    {
+      title: "English 8",
+      image: "https://www.trims.edu.az/cache/2962aab02425f8e886434d22b156840e_400_570.jpg",
+      link: "https://www.trims.edu.az/noduploads/book/quot-english-quot-ingilis-dili-asas-xarici-dil-fanni-uzra-8-ci-sinif-ucun-darslik.pdf"
+    },
+    {
+      title: "Aim High 1",
+      image: "https://librostextosegundamano.com/wp-content/uploads/2022/03/9780194453004.jpeg",
+      link: "https://vk.com/doc466329828_559552233?hash=1c7oSytWde1AFUx0mIXgby14lQdAAm91Z9gOqBZaO1z"
+    }
+  ],
+  "Additional Resources": [
+    {
+      title: "Super Minds 6",
+      image: "https://online.fliphtml5.com/eqmzf/ubjj/files/large/1.webp?1621266798&1621266798",
+      link: "https://online.fliphtml5.com/eqmzf/ubjj/#p=1"
+    },
+    {
+      title: "Oxford Grammar for Schools 4",
+      image: "https://salt.tikicdn.com/cache/w1200/ts/product/26/4b/94/e898157cd61654906ad40240430fc031.jpg",
+      link: "https://online.flipbuilder.com/sdtta/kavx/"
+    },
+    {
+      title: "Oxford Grammar for Schools 5",
+      image: "https://m.media-amazon.com/images/I/51l3bO0zLKL._UF1000,1000_QL80_.jpg",
+      link: "https://online.flipbuilder.com/sdtta/kfir/mobile/index.html"
+    }
+  ],
+  "Speaking": [
+    {
+      title: "Oxford Read and Discover 6",
+      image: "https://sun9-80.userapi.com/s/v1/ig2/NepRkb3rz0co_fU54pQv0wfOG6PfiXnc5S13kp0qBbtlh1_jrezpRmQ4GPPn1m1GLfUTZcpy6YPsvUN_Cku_gWBN.jpg?quality=96&as=32x45,48x68,72x101,108x152,160x225,240x338,360x507,480x676,540x761,640x901,720x1014,852x1200&from=bu&cs=640x0",
+      link: "",
+      subcategories: [
+        {
+          title: "Cells and Microbes",
+          link: "https://psv4.userapi.com/s/v1/d/k5ezOf0EGipTvvbaibWVeY6d3O46D9uKPVqwz1VIgC09_vgtfTlrcc8sir8lTvnehrNaKdP9qgURwbbD0HVk1dfQuP3wluwWlbliXCVrLD5KGeYp/Cells_and_Microbes_L6_Oxford_Read_and_Discover_Spilsbury_Louise_and_Richard.pdf"
+        },
+        {
+          title: "Clothes Then and Now",
+          link: "https://psv4.userapi.com/s/v1/d/Ijpym5d0UosFn1b6RlHXS2hctClg4MAfOq7ainvHqWVJkJvpbySppfrgTX4Wmi91mGDsrbH0YiIMjc-WHcKzkBFCa9GX_3-pu-w_gNmcb6xuO0_N/Oxford_Read_and_Discover_Level_6_Clothes_Then_and_Now.pdf"
+        },
+        {
+          title: "Incredible Energy",
+          link: "https://psv4.userapi.com/s/v1/d/0sKOV9sbIkWNxu8jfxafCWL-yrOliys84k68DwMFlpslegF-BPJNYS0Z-rVyQoUV2wb0uaeTTcG3i1XlS11RcFvKPX9zjDSHhiyKE2gbiDacFai2/Oxford_Read_and_Discover_Level_6_Incredible_Energy.pdf"
+        },
+        {
+          title: "Your Amazing Body",
+          link: "https://psv4.userapi.com/s/v1/d/xb3lniwXu93OIvUNYBPyYrrnGx7p7CqkX-QEoLs7c0hxYL9WzDvQL1gpRUcuCt7bOshhgEBoSuv52TyfLpEjbAK-8rh7KrVRHX-lgOgpdz838nmZ/Your_Amazing_Body.pdf"
+        },
+        {
+          title: "All About Space",
+          link: "https://psv4.userapi.com/s/v1/d/3EsFR-ueiu8ucKdVkHJqtgSszYiA1MMxhCm4B4mlew5IFSMSlQYogdhW9TPzViSRgMxOasooJTEQz4hSc2-8h5E8sPQYIVAWAjKseanebnbUiQ9W/all_about_space_level_6.pdf"
+        },
+        {
+          title: "Caring for Our Planet",
+          link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Caring-For-Our-Planet.pdf"
+        },
+        {
+          title: "Earth Then and Now",
+          link: "https://psv4.userapi.com/s/v1/d/j_4EypcNs8wUwNrIapG5tdIv6Qqy_vesAI2dhvbIqcBWG6bb1EjL8OJqIK82hom3Sr3w05QHPola6WlGu_YBJk-DOVEvw4Sz_9BrbXBvwZb8IBhT/Earth_then_and_now_level_6_in.pdf"
+        },
+        {
+          title: "Wonderful Ecosystems",
+          link: "https://www.4mykidz.com/wp-content/uploads/2018/02/Wonderful-Ecosystems.pdf"
+        },
+        {
+          title: "Helping Around the World",
+          link: "https://psv4.userapi.com/s/v1/d/7Lc8PKbYUBvE7Edgl4iQLtkrnfscQN6s0vmuwS1RJS-3Sv5NDL3fNXHknQGrfwotgTFOobQ__LJlZnTT2nuFBtqQ4lN2-_fnVPnM9TtTPDkM3Om2/helping.pdf"
+        },
+        {
+          title: "Food Around the World",
+          link: "https://psv4.userapi.com/s/v1/d/YWiDOIyy1fOjZvTxmU0imd_ha_pyf6Vsj_e_89krx8F5ca--HNCrTAc4OUzl6OaHpKNp5DoaLoXcyc2k-8vCePn7R77P-ePQbH8wYH2PWklImNI8/Food_around_the_World.pdf"
+        }
+      ]
+    }
+  ]
+},
+
+
+
+};
+
+// Sidebar
+const categoryList = document.getElementById("categoryList");
+categories.forEach(cat => {
+  const li = document.createElement("li");
+  li.textContent = cat;
+  li.onclick = () => loadCategory(cat);
+  categoryList.appendChild(li);
+});
+
+// Load Category
+function loadCategory(category) {
+  document.getElementById("categoryTitle").textContent = category;
+  const bookSections = document.getElementById("bookSections");
+  bookSections.innerHTML = "";
+
+  subcategories.forEach(sub => {
+    const section = document.createElement("div");
+    section.className = "subcategory";
+    section.innerHTML = `<h3>${sub}</h3>`;
+
+    const bookList = document.createElement("div");
+    bookList.className = "book-list";
+
+    const books = resources[category]?.[sub] || [];
+    if (books.length === 0) {
+      bookList.innerHTML = "<p>No books available.</p>";
+    } else {
+      books.forEach(book => {
+        const div = document.createElement("div");
+        div.className = "book";
+        div.innerHTML = `
+          <img src="${book.image}" alt="${book.title}">
+          <a href="${book.link || '#'}" target="_blank">${book.title}</a>
+        `;
+
+        // If book has subcategories
+        if (book.subcategories) {
+          const subList = document.createElement("ul");
+          subList.style.display = "none";
+          subList.style.marginTop = "5px";
+          book.subcategories.forEach(subItem => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${subItem.link}" target="_blank">${subItem.title}</a>`;
+            subList.appendChild(li);
+          });
+
+          const titleLink = div.querySelector("a");
+          titleLink.onclick = (e) => {
+            e.preventDefault();
+            subList.style.display = subList.style.display === "none" ? "block" : "none";
+          };
+
+          div.appendChild(subList);
+        }
+
+        bookList.appendChild(div);
+      });
+    }
+
+    section.appendChild(bookList);
+    bookSections.appendChild(section);
+  });
+}
+
+  </script>
+</body>
+</html>
